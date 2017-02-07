@@ -1,0 +1,12 @@
+{
+  "mongo": {
+    "host": "",
+    "port": 0,
+    "url": "mongodb://localhost/tasks",
+    "database": "",
+    "password": "",
+    "name": "mongo",
+    "user": "",
+    "connector": "mongodb"
+  }
+}
