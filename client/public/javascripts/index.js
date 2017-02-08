@@ -1,5 +1,6 @@
 var $$addTask = document.getElementById('add-task');
 var $$taskContainer = document.getElementById('tasks-container');
+var socket = io.connect('http://localhost:4444');
 
 
 fetch('/api/tasks').then(function(response){
@@ -26,6 +27,7 @@ function bindEventListeners(){
 				editTask($taskContainer);
 			} else {
 				addTask($taskContainer);
+				$taskContainer.remove();
 			}
 		} else if (event.target.className === 'delete-task'){
 			deleteTask($taskContainer)
@@ -72,7 +74,21 @@ function renderTask(task = {}){
 	$$taskContainer.appendChild($taskContainer);
 }
 
+// socket
 
+socket.on('add task', function(task){
+	renderTask(task);
+});
+
+socket.on('edit task', function(task){
+	const $task = document.getElementById(task.id);
+	$task.querySelector('input.task-name').value = task.name;
+});
+
+socket.on('delete task', function(id){
+	const $task = document.getElementById(id);
+	$task.remove();
+});
 
 //Handlers
 
@@ -82,12 +98,10 @@ function addTask(taskContainer){
       return response.json().then(Promise.reject.bind(Promise));
     }
     return response.json();
-	}).then(function(task){
-		renderTask(task)
-		taskContainer.remove();
 	}).catch(function(response) {
     alert(response.error.message);
   });
+  taskContainer.remove();
 }
 
 function editTask(taskContainer){
@@ -108,7 +122,7 @@ function deleteTask(taskContainer){
 			return;
 		} 
 	}).then(function(){
-		taskContainer.remove();
+		
 	});
 }
 

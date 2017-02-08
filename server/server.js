@@ -3,7 +3,7 @@
 var loopback = require('loopback');
 var boot = require('loopback-boot');
 var path = require('path');
-
+var socketService = require('./sockets');
 var app = module.exports = loopback();
 
 app.set('views', path.join(__dirname, '../client/views'));
@@ -31,5 +31,7 @@ boot(app, __dirname, function(err) {
 
   // start the server if `$ node server.js`
   if (require.main === module)
-    app.start();
+    // app.start();
+    app.io = require('socket.io')(app.start());
+    socketService(app.io);
 });
